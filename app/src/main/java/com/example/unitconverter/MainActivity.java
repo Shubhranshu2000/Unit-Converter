@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<CharSequence> arrayAdapter1, arrayAdapter2;
 
     private TextWatcher textWatcher = new TextWatcher() {
+        private boolean ignore = false;
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -55,7 +56,18 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+            if(mCurEditText == 1){
+                if(ignore) return;
+                ignore = true;
+                mEditText2.setText(charSequence);
+                ignore = false;
+            }
+            else{
+                if(ignore) return;
+                ignore = true;
+                mEditText1.setText(charSequence);
+                ignore = false;
+            }
         }
 
         @Override
@@ -70,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
             //Toast.makeText(MainActivity.this, view.getId()+"is Clicked", Toast.LENGTH_SHORT).show();
             int id = view.getId();
             setSpinner(id);
-
         }
     };
 
@@ -80,10 +91,14 @@ public class MainActivity extends AppCompatActivity {
             //Toast.makeText(MainActivity.this, view+"", Toast.LENGTH_SHORT).show();
             int id = view.getId();
             if(id == mEditText1.getId()){
+                mCurEditText = 1;
+
                 Toast.makeText(MainActivity.this, "editTextView 1 is changed", Toast.LENGTH_SHORT).show();
                 mEditText1.addTextChangedListener(textWatcher);
             }
             else if (id == mEditText2.getId()){
+                mCurEditText = 2;
+
                 Toast.makeText(MainActivity.this, "editTextView 2 is changed", Toast.LENGTH_SHORT).show();
                 mEditText2.addTextChangedListener(textWatcher);
             }

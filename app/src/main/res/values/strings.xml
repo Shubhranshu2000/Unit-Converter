@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">Unit Converter</string>
+    <string-array name="length_units">
+        <item>Millimeter (mm)</item>
+        <item>Centimeter (cm)</item>
+        <item>Metres (m)</item>
+        <item>Kilometres (km)</item>
+        <item>Inches (in)</item>
+        <item>Feet (ft)</item>
+        <item>Yards (yd)</item>
+        <item>Miles (mi)</item>
+        <item>Nautical miles (NM)</item>
+        <item>Mils (mil)</item>
+    </string-array>
+
+    <string-array name="mass_units">
+        <item>Tons (t)</item>
+        <item>UK tons(t)</item>
+        <item>US tons(t)</item>
+        <item>Pounds (lb)</item>
+        <item>Ounces (oz)</item>
+        <item>Kilogrammes (kg)</item>
+        <item>Grams (g)</item>
+    </string-array>
+
+    <string-array name="time_units">
+        <item>Milliseconds (ms)</item>
+        <item>Seconds (s)</item>
+        <item>Minutes (min)</item>
+        <item>Hours (h)</item>
+        <item>Days (d)</item>
+        <item>Weeks (wk)</item>
+    </string-array>
+
+    <string-array name="temperature_units">
+        <item>Celsius (C)</item>
+        <item>Fahrenheit (F)</item>
+        <item>Kelvin (K)</item>
+    </string-array>
+
+
+</resources>

@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -47,25 +50,74 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayAdapter<CharSequence> arrayAdapter1, arrayAdapter2;
 
+    int maxLength = 15;
+
+    public InputFilter[] inputFilter = new InputFilter[]{new InputFilter(){
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+            Log.i("Filter", "source=" + source + ",start=" + start + ",end=" + end
+                    + ",dest=" + dest.toString() + ",dstart=" + dstart
+                    + ",dend=" + dend);
+            if(dest.length() < 15) return source;
+            Toast.makeText(MainActivity.this, "Can't enter more than 15 digits", Toast.LENGTH_SHORT).show();
+            return "";
+        }
+    }};
+
     private TextWatcher textWatcher = new TextWatcher() {
         private boolean ignore = false;
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        String beforeText = "";
 
+        public String changeString(String beforeText, String cur){
+            if(beforeText.equals("0") && (cur.length() > 1 && !cur.substring(cur.length() - 1).equals("."))){
+                return cur.substring(cur.length() - 1);
+            }
+            cur = removeLeadingZeros(cur);
+            return cur;
+        }
+
+        public String removeLeadingZeros(String curString){
+            if(curString.length() < 2) return curString;
+            int i = 0;
+            boolean decimalPresent = false;
+            while(curString.charAt(i) == '0' || curString.charAt(i) == '.'){
+                if(curString.charAt(i) == '.'){
+                    decimalPresent = true;
+                    break;
+                }
+                i++;
+            }
+            if(!decimalPresent)
+                return curString.substring(i);
+            if(curString.charAt(0) == '.') curString = "0" + curString;
+            return curString;
+        }
+        @Override
+        public void beforeTextChanged(CharSequence source, int i, int i1, int i2) {
+            Log.i("BeforeTextChanged", "source=" + source + " ,i=" + i + " ,i1=" + i1 + " ,i2=" + i2);
+            beforeText = source.toString();
+            int selectionPosition = mEditText2.getSelectionEnd();
+            Log.i("BeforeTextChanged", "Selection Positon=" + selectionPosition);
         }
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            String curString = changeString(beforeText, charSequence.toString());
+
             if(mCurEditText == 1){
                 if(ignore) return;
                 ignore = true;
-                mEditText2.setText(charSequence);
+                mEditText1.setText(curString);
+                mEditText1.setSelection(curString.length());
+                mEditText2.setText(curString);
                 ignore = false;
             }
             else{
                 if(ignore) return;
                 ignore = true;
-                mEditText1.setText(charSequence);
+                mEditText2.setText(curString);
+                mEditText2.setSelection(curString.length());
+                mEditText1.setText(curString);
                 ignore = false;
             }
         }
@@ -75,6 +127,8 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
+
+    //private EditViewUpdate editViewUpdate = new EditViewUpdate();
 
     private View.OnClickListener viewOnClickLinstener = new View.OnClickListener(){
         @Override
@@ -143,6 +197,9 @@ public class MainActivity extends AppCompatActivity {
         mSpinner2.setAdapter(arrayAdapter2);
 
         mLengthTextView.setTextColor(Color.parseColor("#DDCD8A28"));
+
+        mEditText1.setFilters(inputFilter);
+        mEditText2.setFilters(inputFilter);
 
         mEditText1.setOnFocusChangeListener(onFocusChangeListener);
         mEditText2.setOnFocusChangeListener(onFocusChangeListener);
